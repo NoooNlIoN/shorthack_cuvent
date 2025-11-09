@@ -57,6 +57,26 @@ async def create_event_moderation_history_route(
     return await create_event_moderation_history(session=session, payload=payload)
 
 
+@moderation_router.get("/application-history", response_model=list[ApplicationHistoryRecord])
+async def list_application_history_route(
+    params: Annotated[ApplicationHistoryListParams, Depends()],
+    session: AsyncSession = Depends(provide_session),
+) -> list[ApplicationHistoryRecord]:
+    return await list_application_history(session=session, params=params)
+
+
+@moderation_router.post(
+    "/application-history",
+    response_model=ApplicationHistoryRecord,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_application_history_route(
+    payload: ApplicationHistoryCreatePayload,
+    session: AsyncSession = Depends(provide_session),
+) -> ApplicationHistoryRecord:
+    return await create_application_history(session=session, payload=payload)
+
+
 @moderation_router.get("/event-history/{history_id}", response_model=EventModerationHistoryRecord)
 async def get_event_moderation_history_route(
     history_id: UUID,
@@ -84,26 +104,6 @@ async def delete_event_moderation_history_route(
     session: AsyncSession = Depends(provide_session),
 ) -> EventModerationHistoryRecord:
     return await delete_event_moderation_history(session=session, history_id=history_id)
-
-
-@moderation_router.get("/application-history", response_model=list[ApplicationHistoryRecord])
-async def list_application_history_route(
-    params: Annotated[ApplicationHistoryListParams, Depends()],
-    session: AsyncSession = Depends(provide_session),
-) -> list[ApplicationHistoryRecord]:
-    return await list_application_history(session=session, params=params)
-
-
-@moderation_router.post(
-    "/application-history",
-    response_model=ApplicationHistoryRecord,
-    status_code=status.HTTP_201_CREATED,
-)
-async def create_application_history_route(
-    payload: ApplicationHistoryCreatePayload,
-    session: AsyncSession = Depends(provide_session),
-) -> ApplicationHistoryRecord:
-    return await create_application_history(session=session, payload=payload)
 
 
 @moderation_router.get("/application-history/{history_id}", response_model=ApplicationHistoryRecord)

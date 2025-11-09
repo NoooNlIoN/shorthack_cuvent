@@ -49,6 +49,22 @@ async def create_user_route(
     return await create_user(session=session, payload=payload)
 
 
+@users_router.get("/profiles", response_model=list[UserProfileRecord])
+async def list_user_profiles_route(
+    params: Annotated[UserProfileListParams, Depends()],
+    session: AsyncSession = Depends(provide_session),
+) -> list[UserProfileRecord]:
+    return await list_user_profiles(session=session, params=params)
+
+
+@users_router.post("/profiles", response_model=UserProfileRecord, status_code=status.HTTP_201_CREATED)
+async def create_user_profile_route(
+    payload: UserProfileCreatePayload,
+    session: AsyncSession = Depends(provide_session),
+) -> UserProfileRecord:
+    return await create_user_profile(session=session, payload=payload)
+
+
 @users_router.get("/{user_id}", response_model=UserRecord)
 async def get_user_route(
     user_id: UUID,
@@ -72,22 +88,6 @@ async def delete_user_route(
     session: AsyncSession = Depends(provide_session),
 ) -> UserRecord:
     return await delete_user(session=session, user_id=user_id)
-
-
-@users_router.get("/profiles", response_model=list[UserProfileRecord])
-async def list_user_profiles_route(
-    params: Annotated[UserProfileListParams, Depends()],
-    session: AsyncSession = Depends(provide_session),
-) -> list[UserProfileRecord]:
-    return await list_user_profiles(session=session, params=params)
-
-
-@users_router.post("/profiles", response_model=UserProfileRecord, status_code=status.HTTP_201_CREATED)
-async def create_user_profile_route(
-    payload: UserProfileCreatePayload,
-    session: AsyncSession = Depends(provide_session),
-) -> UserProfileRecord:
-    return await create_user_profile(session=session, payload=payload)
 
 
 @users_router.get("/profiles/{profile_id}", response_model=UserProfileRecord)

@@ -75,6 +75,82 @@ async def create_event_route(
     return await create_event(session=session, payload=payload)
 
 
+@events_router.get("/categories", response_model=list[EventCategoryRecord])
+async def list_event_categories_route(
+    params: Annotated[EventCategoryListParams, Depends()],
+    session: AsyncSession = Depends(provide_session),
+) -> list[EventCategoryRecord]:
+    return await list_event_categories(session=session, params=params)
+
+
+@events_router.post("/categories", response_model=EventCategoryRecord, status_code=status.HTTP_201_CREATED)
+async def create_event_category_route(
+    payload: EventCategoryCreatePayload,
+    session: AsyncSession = Depends(provide_session),
+) -> EventCategoryRecord:
+    return await create_event_category(session=session, payload=payload)
+
+
+@events_router.get("/category-mappings", response_model=list[EventCategoryMappingRecord])
+async def list_event_category_mappings_route(
+    params: Annotated[EventCategoryMappingListParams, Depends()],
+    session: AsyncSession = Depends(provide_session),
+) -> list[EventCategoryMappingRecord]:
+    return await list_event_category_mappings(session=session, params=params)
+
+
+@events_router.post(
+    "/category-mappings",
+    response_model=EventCategoryMappingRecord,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_event_category_mapping_route(
+    payload: EventCategoryMappingCreatePayload,
+    session: AsyncSession = Depends(provide_session),
+) -> EventCategoryMappingRecord:
+    return await create_event_category_mapping(session=session, payload=payload)
+
+
+@events_router.get("/registrations", response_model=list[EventRegistrationRecord])
+async def list_event_registrations_route(
+    params: Annotated[EventRegistrationListParams, Depends()],
+    session: AsyncSession = Depends(provide_session),
+) -> list[EventRegistrationRecord]:
+    return await list_event_registrations(session=session, params=params)
+
+
+@events_router.post(
+    "/registrations",
+    response_model=EventRegistrationRecord,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_event_registration_route(
+    payload: EventRegistrationCreatePayload,
+    session: AsyncSession = Depends(provide_session),
+) -> EventRegistrationRecord:
+    return await create_event_registration(session=session, payload=payload)
+
+
+@events_router.get("/applications", response_model=list[EventApplicationRecord])
+async def list_event_applications_route(
+    params: Annotated[EventApplicationListParams, Depends()],
+    session: AsyncSession = Depends(provide_session),
+) -> list[EventApplicationRecord]:
+    return await list_event_applications(session=session, params=params)
+
+
+@events_router.post(
+    "/applications",
+    response_model=EventApplicationRecord,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_event_application_route(
+    payload: EventApplicationCreatePayload,
+    session: AsyncSession = Depends(provide_session),
+) -> EventApplicationRecord:
+    return await create_event_application(session=session, payload=payload)
+
+
 @events_router.get("/{event_id}", response_model=EventRecord)
 async def get_event_route(
     event_id: UUID,
@@ -100,22 +176,6 @@ async def delete_event_route(
     return await delete_event(session=session, event_id=event_id)
 
 
-@events_router.get("/categories", response_model=list[EventCategoryRecord])
-async def list_event_categories_route(
-    params: Annotated[EventCategoryListParams, Depends()],
-    session: AsyncSession = Depends(provide_session),
-) -> list[EventCategoryRecord]:
-    return await list_event_categories(session=session, params=params)
-
-
-@events_router.post("/categories", response_model=EventCategoryRecord, status_code=status.HTTP_201_CREATED)
-async def create_event_category_route(
-    payload: EventCategoryCreatePayload,
-    session: AsyncSession = Depends(provide_session),
-) -> EventCategoryRecord:
-    return await create_event_category(session=session, payload=payload)
-
-
 @events_router.get("/categories/{category_id}", response_model=EventCategoryRecord)
 async def get_event_category_route(
     category_id: UUID,
@@ -139,26 +199,6 @@ async def delete_event_category_route(
     session: AsyncSession = Depends(provide_session),
 ) -> EventCategoryRecord:
     return await delete_event_category(session=session, category_id=category_id)
-
-
-@events_router.get("/category-mappings", response_model=list[EventCategoryMappingRecord])
-async def list_event_category_mappings_route(
-    params: Annotated[EventCategoryMappingListParams, Depends()],
-    session: AsyncSession = Depends(provide_session),
-) -> list[EventCategoryMappingRecord]:
-    return await list_event_category_mappings(session=session, params=params)
-
-
-@events_router.post(
-    "/category-mappings",
-    response_model=EventCategoryMappingRecord,
-    status_code=status.HTTP_201_CREATED,
-)
-async def create_event_category_mapping_route(
-    payload: EventCategoryMappingCreatePayload,
-    session: AsyncSession = Depends(provide_session),
-) -> EventCategoryMappingRecord:
-    return await create_event_category_mapping(session=session, payload=payload)
 
 
 @events_router.get("/category-mappings/{mapping_id}", response_model=EventCategoryMappingRecord)
@@ -190,26 +230,6 @@ async def delete_event_category_mapping_route(
     return await delete_event_category_mapping(session=session, mapping_id=mapping_id)
 
 
-@events_router.get("/registrations", response_model=list[EventRegistrationRecord])
-async def list_event_registrations_route(
-    params: Annotated[EventRegistrationListParams, Depends()],
-    session: AsyncSession = Depends(provide_session),
-) -> list[EventRegistrationRecord]:
-    return await list_event_registrations(session=session, params=params)
-
-
-@events_router.post(
-    "/registrations",
-    response_model=EventRegistrationRecord,
-    status_code=status.HTTP_201_CREATED,
-)
-async def create_event_registration_route(
-    payload: EventRegistrationCreatePayload,
-    session: AsyncSession = Depends(provide_session),
-) -> EventRegistrationRecord:
-    return await create_event_registration(session=session, payload=payload)
-
-
 @events_router.get("/registrations/{registration_id}", response_model=EventRegistrationRecord)
 async def get_event_registration_route(
     registration_id: UUID,
@@ -237,26 +257,6 @@ async def delete_event_registration_route(
     session: AsyncSession = Depends(provide_session),
 ) -> EventRegistrationRecord:
     return await delete_event_registration(session=session, registration_id=registration_id)
-
-
-@events_router.get("/applications", response_model=list[EventApplicationRecord])
-async def list_event_applications_route(
-    params: Annotated[EventApplicationListParams, Depends()],
-    session: AsyncSession = Depends(provide_session),
-) -> list[EventApplicationRecord]:
-    return await list_event_applications(session=session, params=params)
-
-
-@events_router.post(
-    "/applications",
-    response_model=EventApplicationRecord,
-    status_code=status.HTTP_201_CREATED,
-)
-async def create_event_application_route(
-    payload: EventApplicationCreatePayload,
-    session: AsyncSession = Depends(provide_session),
-) -> EventApplicationRecord:
-    return await create_event_application(session=session, payload=payload)
 
 
 @events_router.get("/applications/{application_id}", response_model=EventApplicationRecord)

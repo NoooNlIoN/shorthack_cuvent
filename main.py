@@ -5,6 +5,7 @@
 
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
 from routers import (
@@ -31,6 +32,34 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def custom_openapi() -> dict:
+    if app.openapi_schema:
+        return app.openapi_schema
+    schema = get_openapi(
+        title="back-short-hack",
+        version="1.0.0",
+        routes=app.routes,
+    )
+    security_schemes = schema.setdefault("components", {}).setdefault("securitySchemes", {})
+    security_schemes["bearerAuth"] = {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+    }
+    unsecured_paths = {"/auth/login", "/auth/register", "/auth/refresh"}
+    for path, operations in schema.get("paths", {}).items():
+        if path in unsecured_paths:
+            continue
+        for operation in operations.values():
+            if isinstance(operation, dict):
+                operation.setdefault("security", []).append({"bearerAuth": []})
+    app.openapi_schema = schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
 
 @app.exception_handler(ServiceError)
