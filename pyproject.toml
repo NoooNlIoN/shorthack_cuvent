@@ -1,0 +1,16 @@
+[project]
+name = "back-short-hack"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.17.1",
+    "asyncpg>=0.30.0",
+    "fastapi>=0.121.1",
+    "psycopg[binary]>=3.2.12",
+    "pydantic>=2.12.4",
+    "pydantic-settings>=2.11.0",
+    "pyjwt>=2.10.1",
+    "sqlalchemy>=2.0.44",
+    "uvicorn>=0.38.0",
+]
